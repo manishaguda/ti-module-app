@@ -12,6 +12,15 @@ resource "aws_security_group" "main" {
 
   }
 
+  ingress {
+    description      = "SSH"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = var.bastion_cidr
+
+  }
+
   egress {
     from_port        = 0
     to_port          = 0
@@ -40,6 +49,10 @@ resource "aws_autoscaling_group" "asg" {
   force_delete              = true
   vpc_zone_identifier       = var.subnet_ids
 
+  launch_template {
+    id     = aws_launch_template.main.id
+    version = "$Latest"
+  }
 
   dynamic "tag" {
     for_each = local.all_tags
