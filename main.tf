@@ -111,7 +111,7 @@ resource "aws_launch_template" "main" {
   iam_instance_profile {
     arn = aws_iam_instance_profile.profile.arn
   }
-  user_data = filebase64("${path.module}/user-data.sh")
+  user_data = base64decode(templatefile("${path.module}/user-data.sh", {component = var.component, env= var.env}))
 }
 
 
